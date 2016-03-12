@@ -17,6 +17,8 @@
 
 namespace PhpOffice\PhpPresentation\Reader;
 
+/** This file will be edited to also read slideLayout things */
+
 use ZipArchive;
 use PhpOffice\Common\XMLReader;
 use PhpOffice\Common\Drawing as CommonDrawing;
