@@ -19,6 +19,7 @@ namespace PhpOffice\PhpPresentation\Reader;
 
 /** This file will be edited to also read slideLayout things */
 
+use PhpOffice\PhpPresentation\Shape\Placeholder;
 use ZipArchive;
 use PhpOffice\Common\XMLReader;
 use PhpOffice\Common\Drawing as CommonDrawing;
@@ -318,6 +319,7 @@ class PowerPoint2007 implements ReaderInterface
                     break;
                 }
             }
+
         }
     }
     
@@ -457,6 +459,14 @@ class PowerPoint2007 implements ReaderInterface
             }
             if ($oElement->hasAttribute('cy')) {
                 $oShape->setHeight(CommonDrawing::emuToPixels($oElement->getAttribute('cy')));
+            }
+        }
+
+        $oElement = $document->getElement('p:nvSpPr/p:nvPr/p:ph', $node);
+        if ($oElement) {
+            if ($oElement->hasAttribute('type')) {
+                $placeholder = new Placeholder($oElement->getAttribute('type'));
+                $oShape->setPlaceHolder($placeholder);
             }
         }
         
