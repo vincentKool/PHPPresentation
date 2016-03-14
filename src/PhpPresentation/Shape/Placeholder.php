@@ -16,7 +16,6 @@
 
 namespace PhpOffice\PhpPresentation\Shape;
 
-
 class Placeholder
 {
     /** Placeholder Type constants */

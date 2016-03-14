@@ -452,7 +452,9 @@ abstract class AbstractShape implements ComparableInterface
 
     public function getPlaceholder()
     {
-        if(!$this->isPlaceholder()) return null;
+        if (!$this->isPlaceholder()) {
+            return null;
+        }
         return $this->placeholder;
     }
 

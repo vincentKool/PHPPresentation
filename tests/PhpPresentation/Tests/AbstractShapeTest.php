@@ -77,7 +77,10 @@ class AbstractShapeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($object->hasHyperlink());
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\Shape\\Hyperlink', $object->getHyperlink());
         $this->assertTrue($object->hasHyperlink());
-        $this->assertInstanceOf('PhpOffice\\PhpPresentation\\AbstractShape', $object->setHyperlink(new Hyperlink('http://www.google.fr')));
+        $this->assertInstanceOf(
+            'PhpOffice\\PhpPresentation\\AbstractShape',
+            $object->setHyperlink(new Hyperlink('http://www.google.fr'))
+        );
         $this->assertTrue($object->hasHyperlink());
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\Shape\\Hyperlink', $object->getHyperlink());
         $this->assertTrue($object->hasHyperlink());
@@ -148,7 +151,10 @@ class AbstractShapeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\AbstractShape', $object->setWidthAndHeight($value));
         $this->assertEquals($value, $object->getWidth());
         $this->assertEquals(0, $object->getHeight());
-        $this->assertInstanceOf('PhpOffice\\PhpPresentation\\AbstractShape', $object->setWidthAndHeight($value, $value));
+        $this->assertInstanceOf(
+            'PhpOffice\\PhpPresentation\\AbstractShape',
+            $object->setWidthAndHeight($value, $value)
+        );
         $this->assertEquals($value, $object->getWidth());
         $this->assertEquals($value, $object->getHeight());
     }
@@ -157,8 +163,10 @@ class AbstractShapeTest extends \PHPUnit_Framework_TestCase
     {
         $object = new RichText();
         $this->assertFalse($object->isPlaceholder(), 'Standard Shape should not be a placeholder object');
-        $this->assertInstanceOf('PhpOffice\\PhpPresentation\\AbstractShape',
-            $object->setPlaceHolder(new Placeholder(Placeholder::PH_TYPE_TITLE)));
+        $this->assertInstanceOf(
+            'PhpOffice\\PhpPresentation\\AbstractShape',
+            $object->setPlaceHolder(new Placeholder(Placeholder::PH_TYPE_TITLE))
+        );
         $this->assertTrue($object->isPlaceholder());
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\Shape\\Placeholder', $object->getPlaceholder());
         $this->assertEquals('Title', $object->getPlaceholder()->getType());
