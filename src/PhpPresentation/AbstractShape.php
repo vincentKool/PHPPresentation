@@ -18,6 +18,7 @@
 namespace PhpOffice\PhpPresentation;
 
 use PhpOffice\PhpPresentation\Shape\Hyperlink;
+use PhpOffice\PhpPresentation\Shape\Placeholder;
 use PhpOffice\PhpPresentation\Style\Fill;
 use PhpOffice\PhpPresentation\Style\Shadow;
 
@@ -95,6 +96,13 @@ abstract class AbstractShape implements ComparableInterface
      * @var \PhpOffice\PhpPresentation\Shape\Hyperlink
      */
     protected $hyperlink;
+
+    /**
+     * Placeholder
+     *
+     * @var \PhpOffice\PhpPresentation\Shape\Placeholder
+     */
+    protected $placeholder;
 
     /**
      * Hash index
@@ -434,5 +442,29 @@ abstract class AbstractShape implements ComparableInterface
     public function setHashIndex($value)
     {
         $this->hashIndex = $value;
+    }
+
+
+    public function isPlaceholder()
+    {
+        return !is_null($this->placeholder);
+    }
+
+    public function getPlaceholder()
+    {
+        if (!$this->isPlaceholder()) {
+            return null;
+        }
+        return $this->placeholder;
+    }
+
+    /**
+     * @param \PhpOffice\PhpPresentation\Shape\Placeholder $placeholder
+     * @return $this
+     */
+    public function setPlaceHolder(Placeholder $placeholder)
+    {
+        $this->placeholder = $placeholder;
+        return $this;
     }
 }
