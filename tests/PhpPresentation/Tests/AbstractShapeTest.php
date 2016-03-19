@@ -173,7 +173,8 @@ class AbstractShapeTest extends \PHPUnit_Framework_TestCase
 
         $object = new RichText();
         $this->assertFalse($object->isPlaceholder(), 'Standard Shape should not be a placeholder object');
-        $placeholder = new Placeholder(Placeholder::PH_TYPE_SUBTITLE);
+        $placeholder = new Placeholder(Placeholder::PH_TYPE_TITLE);
+        $placeholder->setType(Placeholder::PH_TYPE_SUBTITLE);
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\AbstractShape', $object->setPlaceHolder($placeholder));
         $this->assertTrue($object->isPlaceholder());
         $this->assertInstanceOf('PhpOffice\\PhpPresentation\\Shape\\Placeholder', $object->getPlaceholder());

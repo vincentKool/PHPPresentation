@@ -19,6 +19,7 @@ namespace PhpOffice\PhpPresentation;
 
 use PhpOffice\PhpPresentation\Slide;
 use PhpOffice\PhpPresentation\Slide\Iterator;
+use PhpOffice\PhpPresentation\Slide\SlideMaster;
 
 /**
  * PhpPresentation
@@ -59,6 +60,14 @@ class PhpPresentation
      * @var int
      */
     protected $activeSlideIndex = 0;
+
+    /**
+     * Collection of Master Slides
+     *
+     * @var \ArrayObject|\PhpOffice\PhpPresentation\Slide\SlideMaster[]
+     */
+    protected $slideMasterCollection;
+    
 
     /**
      * Create a new PhpPresentation with one Slide
@@ -325,6 +334,32 @@ class PhpPresentation
     public function getSlideIterator()
     {
         return new Iterator($this);
+    }
+
+    /**
+     * Create a masterslide and add it to this presentation
+     *
+     * @return \PhpOffice\PhpPresentation\Slide\SlideMaster
+     */
+    public function createMasterSlide()
+    {
+        $newMasterSlide = new SlideMaster($this);
+        $this->addMasterSlide($newMasterSlide);
+        return $newMasterSlide;
+    }
+
+    /**
+     * Add masterslide
+     *
+     * @param  \PhpOffice\PhpPresentation\Slide\SlideMaster $slide
+     * @throws \Exception
+     * @return \PhpOffice\PhpPresentation\Slide\SlideMaster
+     */
+    public function addMasterSlide(SlideMaster $slide = null)
+    {
+        $this->slideMasterCollection[] = $slide;
+
+        return $slide;
     }
 
     /**
