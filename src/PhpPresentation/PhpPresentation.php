@@ -66,8 +66,7 @@ class PhpPresentation
      *
      * @var \ArrayObject|\PhpOffice\PhpPresentation\Slide\SlideMaster[]
      */
-    protected $slideMasterCollection;
-    
+    protected $slideMasters;
 
     /**
      * Create a new PhpPresentation with one Slide
@@ -357,7 +356,7 @@ class PhpPresentation
      */
     public function addMasterSlide(SlideMaster $slide = null)
     {
-        $this->slideMasterCollection[] = $slide;
+        $this->slideMasters[] = $slide;
 
         return $slide;
     }

@@ -28,7 +28,7 @@ class SlideMaster extends AbstractSlide implements ComparableInterface, ShapeCon
      *
      * @var \PhpOffice\PhpPresentation\Slide\SlideMaster[]
      */
-    protected $slideLayoutCollection = array();
+    protected $slideMasters = array();
 
 
     /**
@@ -69,7 +69,7 @@ class SlideMaster extends AbstractSlide implements ComparableInterface, ShapeCon
      */
     public function addSlideLayout(SlideLayout $slide = null)
     {
-        $this->slideLayoutCollection[] = $slide;
+        $this->slideMasters[] = $slide;
 
         return $slide;
     }
