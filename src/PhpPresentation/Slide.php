@@ -52,11 +52,6 @@ class Slide extends AbstractSlide implements ComparableInterface, ShapeContainer
      * @var \PhpOffice\PhpPresentation\Slide\Note
      */
     private $slideNote;
-    /**
-     *
-     * @var \PhpOffice\PhpPresentation\Slide\Transition
-     */
-    private $slideTransition;
 
 
     /**
@@ -172,26 +167,6 @@ class Slide extends AbstractSlide implements ComparableInterface, ShapeContainer
         return $this;
     }
 
-    /**
-     *
-     * @return \PhpOffice\PhpPresentation\Slide\Transition
-     */
-    public function getTransition()
-    {
-        return $this->slideTransition;
-    }
-
-    /**
-     *
-     * @param \PhpOffice\PhpPresentation\Slide\Transition $transition
-     * @return \PhpOffice\PhpPresentation\Slide
-     */
-    public function setTransition(Transition $transition = null)
-    {
-        $this->slideTransition = $transition;
-
-        return $this;
-    }
 
     /**
      * Get the name of the slide

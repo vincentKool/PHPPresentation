@@ -25,6 +25,20 @@ class SlideLayout extends AbstractSlide implements ComparableInterface, ShapeCon
     protected $slideMaster;
 
     /**
+     * Slide relation ID (should not be used by user code!)
+     *
+     * @var string
+     */
+    public $relationId;
+
+    /**
+     * Slide layout NR (should not be used by user code!)
+     *
+     * @var int
+     */
+    public $layoutNr;
+
+    /**
      * Create a new slideLayout
      *
      * @param SlideMaster $pSlideMaster

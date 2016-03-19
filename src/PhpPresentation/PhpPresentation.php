@@ -81,6 +81,9 @@ class PhpPresentation
         $this->setDocumentProperties(new DocumentProperties());
         $this->setPresentationProperties(new PresentationProperties());
         $this->setLayout(new DocumentLayout());
+
+        // Set empty Master & SlideLayout
+        $this->createMasterSlide()->createSlideLayout();
     }
 
     /**
@@ -419,5 +422,10 @@ class PhpPresentation
     public function getZoom()
     {
         return $this->getPresentationProperties()->getZoom();
+    }
+
+    public function getAllMasterSlides()
+    {
+        return $this->slideMasters;
     }
 }
