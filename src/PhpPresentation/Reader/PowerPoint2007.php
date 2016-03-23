@@ -375,6 +375,16 @@ class PowerPoint2007 implements ReaderInterface
             }
             // Header & Footer
 
+            // ColorMapping
+            $colorMap = array();
+            $oElement = $xmlReader->getElement('/p:sldMaster/p:clrMap');
+            if ($oElement->hasAttributes()) {
+                foreach ($oElement->attributes as $attr) {
+                    $colorMap[$attr->nodeName] = $attr->nodeValue;
+                }
+                $oSlideMaster->colorMap->setNewMapping($colorMap);
+            }
+
             // Load the Layoutslide
             foreach ($xmlReader->getElements('/p:sldMaster/p:sldLayoutIdLst/p:sldLayoutId') as $oElement) {
                 $rId = $oElement->getAttribute('r:id');

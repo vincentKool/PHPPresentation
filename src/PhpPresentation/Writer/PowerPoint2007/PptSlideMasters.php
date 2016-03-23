@@ -13,6 +13,7 @@ use PhpOffice\PhpPresentation\Shape\RichText;
 use PhpOffice\PhpPresentation\Shape\Table as ShapeTable;
 use PhpOffice\PhpPresentation\Slide;
 use PhpOffice\PhpPresentation\Slide\SlideMaster;
+use PhpOffice\PhpPresentation\Style\TextStyle;
 
 class PptSlideMasters extends AbstractSlide
 {
@@ -23,6 +24,7 @@ class PptSlideMasters extends AbstractSlide
     {
         $prevLayouts = 0;
         foreach ($this->oPresentation->getAllMasterSlides() as $idx => $oSlide) {
+            $oSlide->setRelsIndex($idx + 1);
             // Add the relations from the masterSlide to the ZIP file
             $this->oZip->addFromString(
                 'ppt/slideMasters/_rels/slideMaster' . ($idx + 1) . '.xml.rels',
@@ -34,7 +36,7 @@ class PptSlideMasters extends AbstractSlide
                 $this->writeSlideMaster($oSlide)
             );
             $prevLayouts += count($oSlide->getAllSlideLayouts());
-            
+
         }
 //        // Add layoutpack relations
 //        $otherRelations = $oLayoutPack->getMasterSlideRelations();
@@ -70,15 +72,15 @@ class PptSlideMasters extends AbstractSlide
         // Relationships
         $objWriter->startElement('Relationships');
         $objWriter->writeAttribute('xmlns', 'http://schemas.openxmlformats.org/package/2006/relationships');
-        
+
         // Starting relation id
-        $relId = 1;
-        
+        $relId = 0;
+
         // Write all the relations to the Layout Slides
         foreach ($pSlideMaster->getAllSlideLayouts() as $slideLayout) {
             $this->writeRelationship(
                 $objWriter,
-                $relId++,
+                ++$relId,
                 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout',
                 '../slideLayouts/slideLayout' . ++$layoutNr . '.xml'
             );
@@ -86,7 +88,7 @@ class PptSlideMasters extends AbstractSlide
             $slideLayout->relationId = 'rId' . $relId;
             $slideLayout->layoutNr = $layoutNr;
         }
-        
+
         // Write drawing relationships?
         $this->drawingRelations($pSlideMaster, $objWriter, $relId);
 
@@ -96,7 +98,7 @@ class PptSlideMasters extends AbstractSlide
 
         // TODO: Relationship theme/theme1.xml
         // Relationship theme/theme1.xml
-//        $this->writeRelationship($objWriter, ++$contentId, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme', '../theme/theme' . $masterId . '.xml');
+        $this->writeRelationship($objWriter, ++$relId, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme', '../theme/theme' . $pSlideMaster->getRelsIndex() . '.xml');
 
 
         $objWriter->endElement();
@@ -190,7 +192,7 @@ class PptSlideMasters extends AbstractSlide
 
         // Loop shapes
         $shapeId = 0;
-        $shapes  = $pSlide->getShapeCollection();
+        $shapes = $pSlide->getShapeCollection();
         foreach ($shapes as $shape) {
             // Increment $shapeId
             ++$shapeId;
@@ -216,13 +218,62 @@ class PptSlideMasters extends AbstractSlide
 
         $objWriter->endElement();
 
-        // p:clrMapOvr
-        $objWriter->startElement('p:clrMapOvr');
+        // < p:clrMap
+        $objWriter->startElement('p:clrMap');
+        foreach ($pSlide->colorMap->getMapping() as $n => $v) {
+            $objWriter->writeAttribute($n, $v);
+        }
+        $objWriter->endElement();
+        // < p:clrMap
 
-        // a:masterClrMapping
-        $objWriter->writeElement('a:masterClrMapping', null);
+        // < p:sldLayoutIdLst
+        $objWriter->startElement('p:sldLayoutIdLst');
+        $sldLayoutId = time() + 689016272; // requires minimum value of 2147483648
+        foreach ($pSlide->getAllSlideLayouts() as $layout) {
+            /* @var $layout Slide\SlideLayout */
+            $objWriter->startElement('p:sldLayoutId');
+            $objWriter->writeAttribute('id', $sldLayoutId++);
+            $objWriter->writeAttribute('r:id', $layout->relationId);
+            $objWriter->endElement();
+        }
+        $objWriter->endElement();
+        // > p:sldLayoutIdLst
+
+        // p:txStyles
+        $objWriter->startElement('p:txStyles');
+        foreach (array("p:titleStyle" => $pSlide->getTextStyles()->getTitleStyle(),
+                     "p:bodyStyle" => $pSlide->getTextStyles()->getBodyStyle(),
+                     "p:otherStyle" => $pSlide->getTextStyles()->getOtherStyle()) as $startElement => $stylesArray) {
+
+            // titleStyle
+            $objWriter->startElement($startElement);
+            foreach ($stylesArray as $lvl => $oParagraph) {
+                /** @var RichText\Paragraph $oParagraph */
+                $elementName = ($lvl == 0 ? "a:defRPr" : "a:lvl" . $lvl . "pPr");
+                $objWriter->startElement($elementName);
+                $objWriter->writeAttribute('algn', $oParagraph->getAlignment()->getHorizontal());
+                $objWriter->writeAttribute('marL', CommonDrawing::pixelsToEmu($oParagraph->getAlignment()->getMarginLeft()));
+                $objWriter->writeAttribute('marR', CommonDrawing::pixelsToEmu($oParagraph->getAlignment()->getMarginRight()));
+                $objWriter->writeAttribute('indent', CommonDrawing::pixelsToEmu($oParagraph->getAlignment()->getIndent()));
+
+                $objWriter->startElement('a:defRPr');
+                $objWriter->writeAttribute('sz', $oParagraph->getFont()->getSize() * 100);
+                $objWriter->writeAttribute('kern', '1200');
+                $objWriter->startElement('a:solidFill');
+                $objWriter->startElement('a:schemeClr');
+                $objWriter->writeAttribute('val', $oParagraph->getFont()->getColor()->getValue());
+                $objWriter->endElement();
+                $objWriter->endElement();
+                $objWriter->endElement();
+
+                $objWriter->endElement();
+            }
+            $objWriter->endElement();
+        }
 
         $objWriter->endElement();
+        // > p:txStyles
+
 
         if (!is_null($pSlide->getTransition())) {
             $this->writeTransition($objWriter, $pSlide->getTransition());

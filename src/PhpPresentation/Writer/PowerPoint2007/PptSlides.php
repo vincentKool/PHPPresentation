@@ -81,8 +81,9 @@ class PptSlides extends AbstractDecoratorWriter
         $idxSlide = $pSlide->getParent()->getIndex($pSlide);
 
         // Write slideLayout relationship
-        $oLayoutPack  = new PackDefault();
-        $layoutId = $oLayoutPack->findlayoutId($pSlide->getSlideLayout(), $pSlide->getSlideMasterId());
+//        $oLayoutPack  = new PackDefault();
+//        $layoutId = $oLayoutPack->findlayoutId($pSlide->getSlideLayout(), $pSlide->getSlideMasterId());
+        $layoutId = 1;
 
         $this->writeRelationship($objWriter, $relId++, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout', '../slideLayouts/slideLayout' . $layoutId . '.xml');
 
