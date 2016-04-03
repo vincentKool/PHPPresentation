@@ -22,7 +22,10 @@ class Placeholder
     const PH_TYPE_BODY = 'body';
     const PH_TYPE_CHART = 'chart';
     const PH_TYPE_SUBTITLE = 'subTitle';
-    const PH_TYPE_TITLE = 'Title';
+    const PH_TYPE_TITLE = 'title';
+    const PH_TYPE_FOOTER = 'ftr';
+    const PH_TYPE_DATETIME = 'dt';
+    const PH_TYPE_SLIDENUM = 'sldNum';
 
     /**
      * hasCustomPrompt
@@ -67,11 +70,28 @@ class Placeholder
 
     /**
      * @param mixed $type
+     * @return string
      */
     public function setType($type)
     {
         $this->type = $type;
         return $this;
 
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdx()
+    {
+        return $this->idx;
+    }
+
+    /**
+     * @param int $idx
+     */
+    public function setIdx($idx)
+    {
+        $this->idx = $idx;
     }
 }

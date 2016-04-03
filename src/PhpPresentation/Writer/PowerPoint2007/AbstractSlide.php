@@ -27,6 +27,7 @@ use PhpOffice\PhpPresentation\Shape\Drawing as ShapeDrawing;
 use PhpOffice\PhpPresentation\Shape\Group;
 use PhpOffice\PhpPresentation\Shape\Line;
 use PhpOffice\PhpPresentation\Shape\MemoryDrawing as MemoryDrawing;
+use PhpOffice\PhpPresentation\Shape\Placeholder;
 use PhpOffice\PhpPresentation\Shape\RichText;
 use PhpOffice\PhpPresentation\Shape\RichText\BreakElement;
 use PhpOffice\PhpPresentation\Shape\RichText\Run;
@@ -132,6 +133,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
      */
     protected function writeShapeText(XMLWriter $objWriter, RichText $shape, $shapeId)
     {
+
         // p:sp
         $objWriter->startElement('p:sp');
 
@@ -141,8 +143,11 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         // p:sp\p:nvSpPr\p:cNvPr
         $objWriter->startElement('p:cNvPr');
         $objWriter->writeAttribute('id', $shapeId);
-        $objWriter->writeAttribute('name', '');
-
+        if ($shape->isPlaceholder()) {
+            $objWriter->writeAttribute('name', 'Placeholder for ' . $shape->getPlaceholder()->getType());
+        } else {
+            $objWriter->writeAttribute('name', '');
+        }
         // Hyperlink
         if ($shape->hasHyperlink()) {
             $this->writeHyperlink($objWriter, $shape);
@@ -155,7 +160,18 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         $objWriter->writeAttribute('txBox', '1');
         $objWriter->endElement();
         // p:sp\p:cNvSpPr\p:nvPr
-        $objWriter->writeElement('p:nvPr', null);
+        if ($shape->isPlaceholder()) {
+            $objWriter->startElement('p:nvPr');
+            $objWriter->startElement('p:ph');
+            $objWriter->writeAttribute('type', $shape->getPlaceholder()->getType());
+            if (!is_null($shape->getPlaceholder()->getIdx())) {
+                $objWriter->writeAttribute('idx', $shape->getPlaceholder()->getIdx());
+            }
+            $objWriter->endElement();
+            $objWriter->endElement();
+        } else {
+            $objWriter->writeElement('p:nvPr', null);
+        }
         // > p:sp\p:cNvSpPr
         $objWriter->endElement();
 
@@ -254,9 +270,22 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         // a:lstStyle
         $objWriter->writeElement('a:lstStyle', null);
 
-        // Write paragraphs
-        $this->writeParagraphs($objWriter, $shape->getParagraphs());
-
+        if ($shape->isPlaceholder() &&
+            ($shape->getPlaceholder()->getType() == Placeholder::PH_TYPE_SLIDENUM ||
+                $shape->getPlaceholder()->getType() == Placeholder::PH_TYPE_DATETIME)) {
+            $objWriter->startElement('a:p');
+            $objWriter->startElement('a:fld');
+            $objWriter->writeAttribute('id', $this->getGUID());
+            $objWriter->writeAttribute('type', (
+                $shape->getPlaceholder()->getType() == Placeholder::PH_TYPE_SLIDENUM ? 'slidenum' : 'datetime'));
+            $objWriter->writeElement('a:t', (
+            $shape->getPlaceholder()->getType() == Placeholder::PH_TYPE_SLIDENUM ? '<nr.>' : '03-04-05'));
+            $objWriter->endElement();
+            $objWriter->endElement();
+        } else {
+            // Write paragraphs
+            $this->writeParagraphs($objWriter, $shape->getParagraphs());
+        }
         $objWriter->endElement();
 
         $objWriter->endElement();
@@ -1238,5 +1267,24 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
 
         // > p:bg
         $objWriter->endElement();
+    }
+
+    private function getGUID()
+    {
+        if (function_exists('com_create_guid')) {
+            return com_create_guid();
+        } else {
+            mt_srand((double)microtime() * 10000);//optional for php 4.2.0 and up.
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45);// "-"
+            $uuid = chr(123)// "{"
+                . substr($charid, 0, 8) . $hyphen
+                . substr($charid, 8, 4) . $hyphen
+                . substr($charid, 12, 4) . $hyphen
+                . substr($charid, 16, 4) . $hyphen
+                . substr($charid, 20, 12)
+                . chr(125);// "}"
+            return $uuid;
+        }
     }
 }

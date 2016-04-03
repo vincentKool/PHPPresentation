@@ -156,7 +156,7 @@ class TextStyle
         if ($default) {
             $oRTParagraph = new RichTextParagraph();
             $oRTParagraph->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $oRTParagraph->getFont()->setSize(44)->setColor(new SchemeColor())->getColor()->setValue("tx1");
+            $oRTParagraph->getFont()->setSize(44)->setColor(new SchemeColor())->getColor()->setValue("lt1");
             $this->titleStyle[1] = $oRTParagraph;
 
             $oRTParagraph = new RichTextParagraph();
