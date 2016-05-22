@@ -36,7 +36,6 @@ class PptSlideMasters extends AbstractSlide
                 $this->writeSlideMaster($oSlide)
             );
             $prevLayouts += count($oSlide->getAllSlideLayouts());
-
         }
 //        // Add layoutpack relations
 //        $otherRelations = $oLayoutPack->getMasterSlideRelations();
@@ -244,7 +243,6 @@ class PptSlideMasters extends AbstractSlide
         foreach (array("p:titleStyle" => $pSlide->getTextStyles()->getTitleStyle(),
                      "p:bodyStyle" => $pSlide->getTextStyles()->getBodyStyle(),
                      "p:otherStyle" => $pSlide->getTextStyles()->getOtherStyle()) as $startElement => $stylesArray) {
-
             // titleStyle
             $objWriter->startElement($startElement);
             foreach ($stylesArray as $lvl => $oParagraph) {

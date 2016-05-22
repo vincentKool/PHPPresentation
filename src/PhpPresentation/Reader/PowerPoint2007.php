@@ -350,7 +350,6 @@ class PowerPoint2007 implements ReaderInterface
                     break;
                 }
             }
-
         }
     }
 
@@ -392,7 +391,6 @@ class PowerPoint2007 implements ReaderInterface
                 $pathLayoutSlide = isset($this->arrayRels[$oSlideMaster->getRelsIndex()][$rId]) ?
                     $this->arrayRels[$oSlideMaster->getRelsIndex()][$rId]['Target'] : '';
                 if (!empty($pathLayoutSlide)) {
-
                     $pptLayoutSlide = $this->oZip->getFromName(
                         'ppt/' . substr($pathLayoutSlide, 3+strrpos($pathLayoutSlide, "../"))
                     );

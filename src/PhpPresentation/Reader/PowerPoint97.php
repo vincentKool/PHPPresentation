@@ -889,7 +889,6 @@ class PowerPoint97 implements ReaderInterface
                         $pos += $fontEmbedData4['recLen'];
                         $fontCollection['recLen'] -= $fontEmbedData4['recLen'];
                     }
-
                 } while ($fontCollection['recLen'] > 0);
             }
         }
