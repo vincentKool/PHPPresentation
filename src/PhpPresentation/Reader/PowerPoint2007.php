@@ -20,11 +20,11 @@ namespace PhpOffice\PhpPresentation\Reader;
 /** This file will be edited to also read slideLayout things */
 
 use PhpOffice\PhpPresentation\Shape\Placeholder;
+use PhpOffice\PhpPresentation\Shape\Drawing\Gd;
 use ZipArchive;
 use PhpOffice\Common\XMLReader;
 use PhpOffice\Common\Drawing as CommonDrawing;
 use PhpOffice\PhpPresentation\PhpPresentation;
-use PhpOffice\PhpPresentation\Shape\MemoryDrawing;
 use PhpOffice\PhpPresentation\Style\Bullet;
 use PhpOffice\PhpPresentation\Style\Color;
 use PhpOffice\PhpPresentation\Writer\PowerPoint2007\LayoutPack\TemplateBased;
@@ -332,7 +332,7 @@ class PowerPoint2007 implements ReaderInterface
     protected function loadShapeDrawing(XMLReader $document, \DOMElement $node, $baseFile)
     {
         // Core
-        $oShape = new MemoryDrawing();
+        $oShape = new Gd();
         $oShape->getShadow()->setVisible(false);
         // Variables
         $fileRels = 'ppt/slides/_rels/'.$baseFile.'.rels';
@@ -566,10 +566,10 @@ class PowerPoint2007 implements ReaderInterface
                         }
                     //} else {
                         // $oText = $oParagraph->createText();
-                    }
 
-                    $oSubSubElement = $document->getElement('a:t', $oSubElement);
-                    $oText->setText($oSubSubElement->nodeValue);
+                        $oSubSubElement = $document->getElement('a:t', $oSubElement);
+                        $oText->setText($oSubSubElement->nodeValue);
+                    }
                 }
             }
         }

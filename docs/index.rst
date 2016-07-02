@@ -25,7 +25,15 @@ PHPPresentation is a library written in pure PHP that provides a set of classes 
    faq
    credits
    references
-   
+
+.. _slidesdocs:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Slides
+
+   slides_animation
+
 .. _shapesdocs:
 
 .. toctree::
@@ -34,6 +42,7 @@ PHPPresentation is a library written in pure PHP that provides a set of classes 
    
    shapes_chart
    shapes_comment
+   shapes_drawing
    shapes_media
    shapes_richtext
    shapes_table
